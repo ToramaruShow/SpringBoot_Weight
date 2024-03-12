@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html  xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+		<title>体重管理システム　検索</title>
+		<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    	<link rel="stylesheet" th:href="@{/css/myboot.css}">
+  		<script th:src="@{/js/echarts/echarts.min.js}"></script>
+	</head>
+	<body>
+		<header>
+	      	<nav class="navbar navbar-expand-lg bg-body-tertiary bg-dark border-bottom border-bottom-dark py-3" data-bs-theme="dark">
+		    <!-- <nav class="navbar bg-dark border-bottom border-bottom-dark" data-bs-theme="dark"> -->
+	    		<div class="container-fluid">
+	      			<a class="navbar-brand mx-3" href="./">体重管理</a>
+      				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        				<span class="navbar-toggler-icon"></span>
+      				</button>
+      				<div class="collapse navbar-collapse" id="navbarSupportedContent">
+        				<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          					<li class="nav-item">
+            					<a class="nav-link active" aria-current="page" href="./">入力</a>
+	          				</li>
+	          				<li class="nav-item">
+    	        				<a class="nav-link active" aria-current="page" href="">検索</a>
+        	  				</li>
+        				</ul>
+    				</div>
+    			</div>
+  			</nav>
+    	</header>
+		<h1 class="mx-4">体重データ入力</h1>
+		<form th:action="@{/search}" th:method="get"><!--new WeightInfoから持ってくる-->
+			<div class="container my-3"><!--fluidがあると全体-->
+		      	<div class="row">
+		        	<div class="col-auto pt-2">
+							[検索年月]
+		        	</div>
+		        	<div class="col-auto pt g-0">
+						<select class="form-select" name="searchYear">
+							<option th:each="i:${#numbers.sequence(2023,2025)}"
+							 th:value="${i}" th:text="${i}+年" th:selected="${i == year}"/>
+						</select>
+		        	</div>
+		        	<div class="col-auto pt g-0">
+						<select class="form-select" name="searchMonth">
+							<option th:each="i:${#numbers.sequence(1,12)}"
+							 th:value="${i}" th:text="${i}+月" th:selected="${i == month}"/>
+						</select>
+		        	</div>
+	        		<div class="col-auto">
+						<button type="submit" name = "btn" value = "search" class="btn btn-primary">検索</button>
+					</div>
+	        		<div class="col-auto">
+						<button type="submit" name="btnnp" value = "next" class="btn btn-success">翌月</button>
+					</div>
+	        		<div class="col g-0">
+						<button type="submit" name="btnnp" value = "prev" class="btn btn-danger">先月</button>
+					</div><!--col3-->
+		    	</div><!--row-->
+			</div><!-- container -->
+		</form>
+		
+		<div class="col" th:if="${list != null}">
+		  <hr>
+		  <div id="charts" style="width:600px; height:400px;"></div>
+	      <script th:src="@{/js/echarts/mycharts.js}"></script>
+	      <script>window.addEventListener("load",weightChart("[[${data}]]","[[${days}]]","[[${weights}]]"))</script>
+		</div>
+		
+		<div th:each="item:${list}" class="">
+    		<form th:action="@{/update}" th:method="put" style="display: inline;">
+        		<input type="hidden" name="id" th:value="${item.id}">
+       			 [ [[${item.id}]] ] 体重：<input type="text" name="weight" th:value="${item.weight}">
+       			 <select th:name="registYear">
+					<option th:each="i:${#numbers.sequence(2023,2025)}"th:value="${i}" 
+								th:text="${i}+年" th:selected="${i == item.registYear}"></option>
+				</select>
+				<select th:name="registMonth">
+					<option th:each="i:${#numbers.sequence(1,12)}" th:value="${i}" 
+								th:text="${i}+月" th:selected="${i == item.registMonth}"></option>
+				</select>
+				<select th:name="registDay">
+					<option th:each="i:${#numbers.sequence(1,31)}" th:value="${i}" 
+								th:text="${i}+日" th:selected="${i == item.registDay}"></option>
+				</select>
+				<button type="submit" name="btn" class="btn btn-success m-1">更新</button>
+    		</form>
+    		<form th:action="@{/update/{id}(id=${item.id})}" th:method="delete" style="display: inline;">
+				<button type="submit" name="btn" class="btn btn-danger">削除</button>
+			</form>
+		</div>
+    	<script th:src="@{js/bootstrap.bundle.min.js}"></script>
+	</body>
+</html>

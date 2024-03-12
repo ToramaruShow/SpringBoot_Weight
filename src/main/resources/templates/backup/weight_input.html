@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html  xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+		<title>体重管理システム　入力</title>
+	</head>
+	<body>
+		<h1>体重データ入力</h1>
+		<div><a th:href="@{/search}">検索</a></div>
+		<form th:action="@{/info}" th:method="put" th:object="${weightInfo}"><!--new WeightInfoから持ってくる-->
+			<dl>
+				<dt>
+					[体重]
+				</dt>
+				<dd>
+					<input type="text" size="10" th:field="*{weight}">kg<!--WeightInfoのweightを持ってくる * を使う-->
+				</dd>
+				<dt>
+					[登録年月日]
+				</dt>
+				<dd>
+					<select th:field="*{registYear}">
+						<option th:each="i:${#numbers.sequence(2023,2025)}"
+						 th:value="${i}" th:text="${i}"/>
+					</select>年
+					<select th:field="*{registMonth}">
+						<option th:each="i:${#numbers.sequence(1,12)}"
+						 th:value="${i}" th:text="${i}"/>
+					</select>月
+					<select th:field="*{registDay}">
+						<option th:each="i:${#numbers.sequence(1,31)}"
+						 th:value="${i}" th:text="${i}"/>
+					</select>日
+				</dd>
+			</dl>
+			<p><button type="submit">登録</button></p>
+		</form>
+	</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html  xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+		<title>体重管理システム　入力</title>
+		<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    	<link rel="stylesheet" th:href="@{/css/myboot.css}">
+  		<script th:src="@{/js/echarts/echarts.min.js}"></script>
+	</head>
+	<body>
+		<header>
+	      	<nav class="navbar navbar-expand-lg bg-body-tertiary bg-dark border-bottom border-bottom-dark py-3" data-bs-theme="dark">
+	    		<div class="container-fluid">
+	      			<a class="navbar-brand mx-3" href="./">体重管理</a>
+      				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        				<span class="navbar-toggler-icon"></span>
+      				</button>
+      				<div class="collapse navbar-collapse" id="navbarSupportedContent">
+        				<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          					<li class="nav-item">
+            					<a class="nav-link active" aria-current="page" href="">入力</a>
+	          				</li>
+	          				<li class="nav-item">
+    	        				<a class="nav-link active" aria-current="page" href="./search">検索</a>
+        	  				</li>
+        				</ul>
+    				</div>
+    			</div>
+  			</nav>
+    	</header>
+		<h1 class="mx-4">体重管理</h1>	
+		
+		<form th:action="@{/info}" th:method="put" th:object="${weightInfo}"><!--new WeightInfoから持ってくる-->
+			<div class="container my-3"><!--fluidがあると全体-->
+		      	<div class="row">
+		        	<div class="col-auto pt-2">
+							[体重]
+		        	</div>
+		        	<div class="col-auto">
+						<input type="text" size="1" class="form-control" th:field="*{weight}"><!--WeightInfoのweightを持ってくる * を使う-->
+					</div>
+			        <div class="col-auto pt g-0 justify-content-center">
+						<select class="form-select" th:field="*{registYear}">
+							<option th:each="i:${#numbers.sequence(2023,2025)}"
+							 th:value="${i}" th:text="${i}+年"/>
+						</select>
+		        	</div>
+		        	<div class="col-auto pt g-0">
+						<select class="form-select" th:field="*{registMonth}">
+							<option th:each="i:${#numbers.sequence(1,12)}"
+							 th:value="${i}" th:text="${i}+月"/>
+						</select>
+		        	</div>
+		        	<div class="col-auto pt g-0">
+						<select class="form-select" th:field="*{registDay}">
+							<option th:each="i:${#numbers.sequence(1,31)}"
+							 th:value="${i}" th:text="${i}+日"/>
+						</select>
+	        		</div>
+	        		<div class="col-auto">
+						<button type="submit" name="btnnp" value = "" class="btn btn-primary">登録</button>
+					</div>
+		    	</div><!--row-->
+			</div><!-- container -->
+		</form>
+	    
+	    <div class="container-fluid">
+	      <div class="row ms-auto">
+	        <div id="main" class="col-2"><!--main-->
+	          <div>
+	            <table class="table table-striped">
+	              <tbody>
+	                <tr th:each="item:${list}">
+	                  	<td class="col-8">[[${item.registYear}]]年[[${item.registMonth}]]月[[${item.registDay}]]日</td>
+	                  	<td class="col-auto">[[${item.weight}]] kg</td>
+	                </tr>
+	              </tbody>
+	            </table>
+	          </div>
+            </div>
+            <div class="col" th:if="${list.size() > 0}">
+			  <div id="charts" style="width:600px; height:400px;"></div>
+  		      <script th:src="@{/js/echarts/mycharts.js}"></script>
+			  <script>window.addEventListener("load",weightChart("[[${month}]]","[[${days}]]","[[${weights}]]"))</script>
+			</div>
+          </div>
+        </div>
+			
+    	<script th:src="@{js/bootstrap.bundle.min.js}"></script>
+	</body>
+</html>

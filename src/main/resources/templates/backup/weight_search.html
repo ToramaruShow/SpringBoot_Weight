@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html  xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+		<title>体重管理システム　検索</title>
+	</head>
+	<body>
+		<h1>体重データ入力</h1>
+		<div><a th:href="@{/}">入力</a></div>
+		<form th:action="@{/search}" th:method="get"><!--new WeightInfoから持ってくる-->
+			<dl>
+				<dt>
+					[検索年月]
+				</dt>
+				<dd>
+					<select name="searchYear">
+						<option th:each="i:${#numbers.sequence(2023,2025)}"
+						 th:value="${i}" th:text="${i}" th:selected="${i == year}"/>
+					</select>年
+					<select name="searchMonth">
+						<option th:each="i:${#numbers.sequence(1,12)}"
+						 th:value="${i}" th:text="${i}" th:selected="${i == month}"/>
+					</select>月
+					<select name="searchDay">
+						<option th:each="i:${#numbers.sequence(1,31)}"
+						 th:value="${i}" th:text="${i}" th:selected="${i == day}"/>
+					</select>日
+				</dd>
+			</dl>
+			<p><button type="submit" name = "btn" value = "search">検索</button></p>
+		</form>
+		<div th:if="${list != null}">
+			<hr>
+		</div>
+		<div th:each="item:${list}">
+    		<form th:action="@{/update}" th:method="put" style="display: inline;">
+        		<input type="hidden" name="id" th:value="${item.id}">
+       			 [ [[${item.id}]] ] 体重：<input type="text" name="weight" th:value="${item.weight}">
+       			 <select th:name="registYear">
+					<option th:each="i:${#numbers.sequence(2023,2025)}"th:value="${i}" 
+								th:text="${i}" th:selected="${i == item.registYear}"></option>
+				</select>年
+				<select th:name="registMonth">
+					<option th:each="i:${#numbers.sequence(1,12)}" th:value="${i}" 
+								th:text="${i}" th:selected="${i == item.registMonth}"></option>
+				</select>月
+				<select th:name="registDay">
+					<option th:each="i:${#numbers.sequence(1,31)}" th:value="${i}" 
+								th:text="${i}" th:selected="${i == item.registDay}"></option>
+				</select>日
+				<button type="submit" name="btn">更新</button>
+    		</form>
+    		<form th:action="@{/update/{id}(id=${item.id})}" th:method="delete" style="display: inline;">
+				<button type="submit" name="btn">削除</button>
+			</form>
+		</div>
+	</body>
+</html>
